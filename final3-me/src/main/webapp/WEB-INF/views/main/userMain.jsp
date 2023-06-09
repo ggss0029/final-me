@@ -192,8 +192,13 @@
                     </div>
                 </div>
                 <div id="mp_work_input">
-                    <button type="button" class="btn btn-primary" style="margin-right: 20px;">출근</button>
-                    <button type="button" class="btn btn-primary">퇴근</button>
+                	<form action="insertGo.ar" method="post">
+	                    <button type="submit" class="btn btn-primary" style="margin-right: 20px;">출근</button>
+                    </form>
+                    
+                    <form action="insertLeave.ar" method="post">
+	                    <button type="submit" class="btn btn-primary">퇴근</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -211,6 +216,12 @@
                         </a>
                     </div>
                 </div>
+                
+                <table id="mainEmailList" border=1 align="center">
+                	<tbody>
+                	
+                	</tbody>
+                </table>
             </div>
 
             <div class="main_notice">
@@ -329,7 +340,7 @@
 	   
 	   function mainNoticeBoardList() {
 		   $.ajax({
-			   url : "mainNoticeList.bo",
+			   url : "mainNoticeList.ma",
 			   success : function(result) {
 				   var str = "";
 				   
@@ -342,6 +353,29 @@
 				   }
 				   
 				   $("#mainNoticeList tbody").html(str);
+			   },
+			   error : function() {
+				   console.log("통신 실패 ");
+			   }
+		   });
+	   }
+	   
+	   //메일 최신순으로 조회
+	   function mainEmailList() {
+		   $.ajax({
+			   url : "mainEmailList.ma",
+			   success : function(result) {
+				   var str = ""
+				   
+				   for(var i in result) {
+					   str += "<tr>"
+					   		+ "<td>" + result[i].emailTitle + "</td>"
+					   		+ "<td>" + result[i].sender + "</td>"
+					   		+ "<td>" + result[i].sendDate + "</td>"
+					   		+ "</tr>"
+				   }
+				   
+				   $("#mainEmailList tbody").html(str);
 			   },
 			   error : function() {
 				   console.log("통신 실패 ");
