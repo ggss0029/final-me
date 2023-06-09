@@ -8,6 +8,7 @@
   		</settings>
   		<typeAliases>
   			<typeAlias type="com.kh.final3.board.model.vo.Board" alias="board"/>
+  			<typeAlias type="com.kh.final3.email.model.vo.Email" alias="email"/>
   		</typeAliases>
   		
   		<mappers>

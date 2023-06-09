@@ -19,7 +19,7 @@ public class Board {
 	private String categoryCode;
 	private String boardTitle;
 	private String boardContent;
-	private Date createDate;
+	private String createDate;
 	private Date modifyDate;
 	private int count;
 	private String status;
