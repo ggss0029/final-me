@@ -6,6 +6,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+	.content{
+            height: 800px;
+        }
 	.main_collect{
             border: 1px solid black;
             width: 1000px;
@@ -109,6 +112,7 @@
 </style>
 </head>
 <body>
+	<%@ include file="../common/menubar.jsp" %>
 	<div class="content">
         <div class="main_collect">
             <div class="admin_c" id="admin_total_user">
@@ -182,5 +186,43 @@
             </div>
         </div>
 	</div>
+	
+	<script>
+	//자바스크립트 실시간 시계
+    function getTime() {
+        const clock = document.getElementById("user_clock");
+        const date = document.getElementById("user_date");
+        const time = new Date();
+        const weekList = ['일', '월', '화', '수', '목', '금', '토'];
+        const calendar = time.getFullYear() + "년 " + (time.getMonth()+1) + "월 " + time.getDate() +"일 " + weekList[time.getDay()] + "요일";
+        let amPm = "AM";
+        let hours = addZeros(time.getHours(),2);
+        const minutes = addZeros(time.getMinutes(),2);
+        const seconds = addZeros(time.getSeconds(),2);
+
+        if(hours >= 12) {
+            amPm="PM"
+            hours = addZeros(hours-12,2);
+        }
+
+        date.innerHTML = calendar;
+        clock.innerHTML = amPm + " " + hours + ":" + minutes + ":" + seconds;
+
+        setTimeout(getTime, 1000);
+   }
+
+   function addZeros(num, digit){
+        let zero = "";
+        num = num.toString();
+        if(num.length < digit) {
+            for(let i =0; i<digit - num.length; i++){
+                zero += "0";
+            }
+        }
+        return zero + num;
+   }
+
+   getTime();
+	</script>
 </body>
 </html>
