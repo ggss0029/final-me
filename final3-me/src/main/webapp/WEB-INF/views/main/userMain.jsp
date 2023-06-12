@@ -84,6 +84,56 @@
         margin-bottom: 24px;
         background-color: bisque;
     }
+    
+    /* 공지사항 소메뉴 전체 div */
+    #main_user_tab_area{
+    	width: 20%;
+		margin: 12px 0 0 20px ;
+		float:left;
+    }
+    
+    #main_user_tab_area>ul{
+		width:100%;
+		height : 30px;
+		list-style-type : none;
+	}
+	
+	#nav-tabs{
+		padding : 0;
+		display: flex;
+	}
+	
+    #main_user_tab_area>ul li{
+    	width :98px;
+    	margin-right: 5px;
+    	float : left;
+    	border-top: 1px solid black;
+    	border-left: 1px solid black;
+    	border-right: 1px solid black;
+    	border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+    }
+    
+    #main_user_tab_area>ul li a{
+    	text-align: center; 	
+    }
+    
+    li:hover{
+    	border-top: 1px solid #dee2e6;
+		border-left: 1px solid #dee2e6;
+		border-right: 1px solid #dee2e6;
+		border-top-left-radius:0.25rem;
+		border-top-right-radius:0.25rem; 
+    }
+	
+	#link_active{
+		border-top: 1px solid #dee2e6;
+		border-left: 1px solid #dee2e6;
+		border-right: 1px solid #dee2e6; 
+		border-bottom: none;
+		border-top-left-radius:0.25rem;
+		border-top-right-radius:0.25rem;
+	}
 
     /* 이름 바꿀예정 */
     .main_others{
@@ -97,14 +147,14 @@
     /* 제목 */
     .main_ctn_title{
         float: left;
-        margin: 12px 0 0 25px;
+		margin: 12px 0 0 25px;
         font-size: 25px;
     }
     
     /* 플러스 아이콘 */
     .main_ctn_plus{
         float: right;
-        margin: 18px 25px;
+		margin: 18px 25px;
         cursor: pointer;
     }
 
@@ -142,7 +192,13 @@
     	margin: auto;
     	font-size: 18px;
     }
-}</style>
+    
+    #mainEmailList{
+    	width: 750px;
+    	margin: auto;
+    	font-size: 18px;
+    }
+</style>
 </head>
 <body>
 	<%@ include file="../common/menubar.jsp" %>
@@ -228,6 +284,17 @@
                 <div>
                     <div class="main_ctn_title">
                         <span>공지 사항</span>
+                        
+                    </div>
+                    <div id="main_user_tab_area">
+	                    <ul id="nav-tabs">
+							<li class="nav-item" id="notice_new" data-tab="mainNoticeList">
+							    <a class="nav-link active" id="link_active" aria-current="page" href="#">new </a>
+							</li>
+							<li class="nav-item" id="notice_liked" data-tab="mainNoticeLikedList">
+							    <a class="nav-link" href="#" id="link_active">liked </a>
+							</li>
+						</ul>
                     </div>
                     <div class="main_ctn_plus">
                         <a href="list.no">
@@ -237,17 +304,7 @@
                 </div>
                 
                 <table id="mainNoticeList" border=1 align="center">
-<!--                 	<thead> -->
-<!--                 		<tr> -->
-<!--                 			<th>제목</th> -->
-<!--                 			<th>작성자 </th> -->
-<!--                 			<th>작성일 </th> -->
-<!--                 			<th>조회수 </th> -->
-<!--                 		</tr> -->
-<!--                 	</thead> -->
-                	
                 	<tbody>
-                	
                 	</tbody>
                 </table>
             </div>
@@ -329,16 +386,17 @@
 	   getTime();
 	   
 	   
-	   //공지사항 최신순으로 조회 
+	   //최근 온 메일 조회 
 	   $(function() {
-		  mainNoticeBoardList();
+		  
+		  mainEmailList();
 		   
 // 		  $(document).on("click","#mainNoticeList>tbody>tr",function() {
 // 			  location.href="detail.no?boardNo="+$(this).children().eq(0).text();
 // 		  })
 	   });
 	   
-	   function mainNoticeBoardList() {
+	   /* function mainNoticeBoardList() {
 		   $.ajax({
 			   url : "mainNoticeList.ma",
 			   success : function(result) {
@@ -358,7 +416,7 @@
 				   console.log("통신 실패 ");
 			   }
 		   });
-	   }
+	   } */
 	   
 	   //메일 최신순으로 조회
 	   function mainEmailList() {
@@ -382,6 +440,62 @@
 			   }
 		   });
 	   }
+	   
+	   /* 공지사항 탭  */
+	    $(function() {
+	    	$("#notice_new").click(function(){
+// 	    		var activeTab = $(this).attr("data-tab");
+// 	    		$("#notice_new").css("background-color", "lightblue");
+// 	    		$(this).css("background-color", "blue");
+	    		$.ajax({
+	 			   url : "mainNoticeList.ma",
+	 			   success : function(result) {
+	 				   
+	 				   var str = "";
+	 				   
+	 				   for(var i in result) {
+	 					   str += "<tr>"
+	 					   		+ "<td>" + result[i].boardTitle + "</td>"
+	 					   		+ "<td>" + result[i].boardWriter + "</td>"
+	 					   		+ "<td>" + result[i].createDate + "</td>"
+	 					   		+ "</tr>"
+	 				   }
+	 				   
+	 				   $("#mainNoticeList tbody").html(str);
+	 			   },
+	 			   error : function() {
+	 				   console.log("통신 실패 ");
+	 			   }
+	 		   });
+	    		
+	    	})
+	    		$("#notice_new").click();
+	    });
+	   
+	   $(function() {
+		   $("#notice_liked").click(function() {
+			   $.ajax({
+				   url : "mainNoticeLiked.ma",
+				   success : function(result) {
+					   console.log(result);
+					   var str ="";
+					   
+					   for(var i in result) {
+	 					   str += "<tr>"
+	 					   		+ "<td>" + result[i].boardTitle + "</td>"
+	 					   		+ "<td>" + result[i].boardWriter + "</td>"
+	 					   		+ "<td>" + result[i].createDate + "</td>"
+	 					   		+ "</tr>"
+	 				   }
+					   
+					   $("#mainNoticeList tbody").html(str);
+				   },
+	 			   error : function() {
+	 				   console.log("통신 실패 ");
+	 			   }
+			   });
+		   });
+	   });
     </script>
 </body>
 </html>

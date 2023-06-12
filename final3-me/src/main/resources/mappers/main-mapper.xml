@@ -6,9 +6,10 @@
 <mapper namespace="mainMapper">
 	<resultMap type="board" id="mainBoardResultset">
 		<result column="BOARD_NO" property="boardNo"/>
-		<result column="BOARD_TITLE" property="boardTitle"/>
 		<result column="USER_NAME" property="boardWriter"/>
 		<result column="CATEGORY_CODE" property="categoryCode"/>
+		<result column="BOARD_TITLE" property="boardTitle"/>
+		<result column="BOARD_CONTENT" property="boardContent"/>
 		<result column="CREATE_DATE" property="createDate"/>
 		<result column="COUNT" property="count"/>
 		<result column="STATUS" property="status"/>
@@ -17,24 +18,58 @@
 	<resultMap type="email" id="mainEmailResultset">
 		<result column="EMAIL_NO" property="emailNo"/>
 		<result column="USER_NAME" property="sender"/>
+		<result column="RECEIVER" property="receiver"/>
 		<result column="EMAIL_TITLE" property="emailTitle"/>
 		<result column="SEND_DATE" property="sendDate"/>
 		<result column="STATUS" property="status"/>
 	</resultMap>
 	
 	<select id="mainNoticeList" resultMap="mainBoardResultset">
-		SELECT BOARD_NO, BOARD_TITLE, USER_NAME, TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, COUNT
-		FROM BOARD B
-		JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
-		WHERE B.STATUS = 'Y'
-		AND CATEGORY_CODE = 'B1'
-		ORDER BY BOARD_NO DESC
+		SELECT ROWNUM, B.*
+		FROM (SELECT BOARD_NO, BOARD_TITLE, USER_NAME, TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, COUNT
+				FROM BOARD B
+				JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+				WHERE B.STATUS = 'Y'
+				AND CATEGORY_CODE = 'B1'
+				ORDER BY BOARD_NO DESC) B
+		WHERE ROWNUM BETWEEN 1 AND 6
+	</select>
+	
+	<select id="mainNoticeLikedList" resultMap="mainBoardResultset">
+		SELECT ROWNUM, B.*
+		FROM (SELECT BOARD_NO, BOARD_TITLE, USER_NAME, TO_CHAR(CREATE_DATE, 'YYYY-MM-DD') CREATE_DATE, COUNT
+				FROM BOARD B
+				JOIN MEMBER M ON (BOARD_WRITER = USER_NO)
+				WHERE BOARD_WRITER = (SELECT USER_NO
+					                    FROM MEMBER 
+					                    WHERE USER_ID = #{userId})
+				AND B.STATUS = 'Y'
+				AND CATEGORY_CODE = 'B1'
+				ORDER BY BOARD_NO DESC) B
+		WHERE ROWNUM BETWEEN 1 AND 6
 	</select>
 	
 	<select id="mainEmailList" resultMap="mainEmailResultset">
-<!-- 		SELECT EMAIL_NO, EMAIL_TITLE, USER_NAME, SEND_DATE -->
-<!-- 		FROM EMAIL E -->
-<!-- 		JOIN MEMBER M ON (SENDER = NU) -->
+<!-- 		SELECT ROWNUM, E.* -->
+<!-- 		FROM (SELECT EMAIL_NO, EMAIL_TITLE, USER_NAME, SEND_DATE -->
+<!-- 				FROM EMAIL E -->
+<!-- 				JOIN MEMBER M ON (SENDER = USER_NO) -->
+<!-- 				JOIN MEMBER M ON (RECEIVER = USER_NO) -->
+<!-- 				WHERE E.STATUS = 'Y' -->
+<!-- 				AND M.USER_ -->
+<!-- 				ORDER BY EMAIL_NO DESC) E -->
+<!-- 		WHERE ROWNUM BETWEEN 1 AND 6 -->
+		
+		SELECT EMAIL_NO, EMAIL_TITLE, USER_NAME, TO_CHAR(SEND_DATE, 'YYYY-MM-DD') SEND_DATE
+		FROM EMAIL E
+		JOIN MEMBER M ON (SENDER = USER_NO)
+		WHERE RECEIVER = (SELECT USER_NO
+		                    FROM MEMBER 
+		                    WHERE USER_ID = #{userId})
+		AND E.STATUS = 'Y'
+		ORDER BY EMAIL_NO DESC
+		
+		
 	</select>
 	
 </mapper>

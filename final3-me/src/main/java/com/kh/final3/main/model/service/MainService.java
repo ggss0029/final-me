@@ -10,7 +10,10 @@ import com.kh.final3.email.model.vo.Email;
 public interface MainService {
 
 	ArrayList<Board> mainNoticeList();
+	
+	ArrayList<Board> mainNoticeLikedList(String userId);
 
-	ArrayList<Email> mainEmailList();
+	ArrayList<Email> mainEmailList(String userId);
+
 
 }

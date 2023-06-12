@@ -19,14 +19,23 @@ public class MainServiceImpl implements MainService {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
+	//최신 공지 조회 
 	@Override
 	public ArrayList<Board> mainNoticeList() {
 		return mainDao.mainNoticeList(sqlSession);
 	}
 
+	//즐겨찾기 공지 조회 
 	@Override
-	public ArrayList<Email> mainEmailList() {
-		return mainDao.mainEmailList(sqlSession);
+	public ArrayList<Board> mainNoticeLikedList(String userId) {
+		return mainDao.mainNoticeLikedList(sqlSession, userId);
 	}
+	
+	//최신 메일 조회 
+	@Override
+	public ArrayList<Email> mainEmailList(String userId) {
+		return mainDao.mainEmailList(sqlSession, userId);
+	}
+
 
 }
