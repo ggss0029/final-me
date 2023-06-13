@@ -9,18 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     
-    <!--  캘린더 & 부트스트 -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+	<!--아이콘 cdn-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	
     
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!--아이콘 cdn-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- 	<link href="/final3/resources/css/menubar.css" rel="stylesheet"> -->
 	<style>
 		        :root{
@@ -339,9 +339,33 @@
 	   .content{
 	        width: 1570px;
 	        /* height: 800px; */
-	        margin-top: 105px;
-	        background-color: khaki;
+	        margin-top: 80px;
+/* 	        background-color: khaki; */
     }
+    
+    /* 상태표시 모달  */
+    .active_update{
+	    width: 200px;
+	    border: 1px solid #C4C4C4;
+	    box-sizing: border-box;
+	    border-radius: 10px;
+	    padding: 12px 13px;
+	    font-family: 'Roboto';
+	    font-style: normal;
+	    font-weight: 400;
+	    font-size: 14px;
+	    line-height: 16px;
+	}
+
+	.active_update:focus{
+	    border: 1px solid #9B51E0;
+	    box-sizing: border-box;
+	    border-radius: 10px;
+	    outline: 3px solid #F8E4FF;
+	    border-radius: 10px;
+	}
+    
+    
 	</style>
 </head>
 <body id="body-pd">
@@ -405,12 +429,17 @@
 
                         <div class="hd_pro_con">
                             <ul class="header_profile_submenu">
-                                <li><a href="#">상태 표시</a></li>
+                                <li>
+                                	<a href="#user_active" data-toggle="modal">상태 표시</a>
+                                </li>
                                 <li><a href="#">마이 페이지</a></li>
                             </ul>
                         </div>
                     </li>
                 </ul>
+				
+                
+                
             </div>  
         </div>
     </div>
@@ -503,9 +532,34 @@
             </div>
         </nav>
     </div>
+    
+    <div class="modal fade" id="user_active" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">상태 업데이트 </h4>
+				</div>
+				<div class="modal-body">
+						<form action="">
+							<select class="active_update">
+								<option value="" selected>활동중 </option>
+								<option value="">퇴근 </option>
+								<option value="">자리 비움 </option>
+							</select>
+						
+						</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">닫기 </button>
+					<button type="button" class="btn btn-primary">변경 </button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <script>
-    document.addEventListener("DOMContentLoaded", function(event) {
+    	document.addEventListener("DOMContentLoaded", function(event) {
         const showNavbar = (toggleId, navId, bodyId, headerId) =>{
 		const toggle = document.getElementById(toggleId),
 		nav = document.getElementById(navId),
@@ -561,6 +615,34 @@
             }
         });
     });
+    
+    
+    var socket;
+    function connect() {
+    	console.log(socket);
+    	
+    	if(!socket) { //접속을 아무리 반복해도 접속자 수 안 늘어남(중복접속 막음 )
+    		var url = "ws://localhost:8080/ws/active";
+    		socket = new WebSocket(url);
+    	}
+    	
+    	socket.onopen = function() {
+    		console.log("서버와 연결됨 ");
+    	}
+    	
+    	socket.onmessage = function() {
+    		console.log("메세지 도착 ");
+    	}
+    	
+    	socket.onclose = function() {
+    		console.log("서버와 연결 종료 ");
+    	}
+    	
+    	socket.onerror = function(e) {
+    		console.log("서버와 연결과정에서 오류 발생 ");
+    	}
+    }
+    
     </script>
 </body>
 </html>

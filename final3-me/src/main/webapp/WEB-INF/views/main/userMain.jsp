@@ -12,17 +12,16 @@
         width: 1570px;
         height: 800px;
         margin-top: 105px;
-        background-color: khaki;
+/*      background-color: khaki; */
     }
 
 
     /* 메인 css */
     .main_profile_area{
-        border: 1px solid black;
         width: 22%;
         height: 800px;
         border-radius: 20px;
-        background-color: lightblue;
+        background-color: rgb(203, 235, 216);
         float: left;
     }
 
@@ -47,18 +46,20 @@
         width: 310px;
         height: 260px;
         border-radius: 20px;
+        margin: 13px;
     }
 
     #mp_work_input button{
         background-color: #0E6251;
         width: 100px;
         border-radius: 50px;
+        float: left;
+        margin-left: 35px;
     }
     
     /* 메인 가운데 전체 div */
     .content_center{
-        background-color: gold;
-        border: 1px solid black;
+/*         background-color: gold; */
         float: left;
         width: 800px;
         height: 100%;
@@ -67,28 +68,26 @@
 
     /* 최근 온 메일 */
     .main_mail{
-        border: 1px solid black;
+        border: 2px solid black;
         border-radius: 20px;
         width: 100%;
         height: 250px;
         margin-bottom: 24px;
-        background-color: pink;
     }
 
     /* 공지사항 */
     .main_notice{
-        border: 1px solid black;
+        border: 2px solid black;
         border-radius: 20px;
         width: 100%;
         height: 250px;
         margin-bottom: 24px;
-        background-color: bisque;
     }
     
-    /* 공지사항 소메뉴 전체 div */
+    /* 공지사항 탭 메뉴 전체 div */
     #main_user_tab_area{
     	width: 20%;
-		margin: 12px 0 0 20px ;
+		margin: 15px 0 0 20px ;
 		float:left;
     }
     
@@ -107,48 +106,38 @@
     	width :98px;
     	margin-right: 5px;
     	float : left;
-    	border-top: 1px solid black;
-    	border-left: 1px solid black;
-    	border-right: 1px solid black;
-    	border-top-left-radius: 10px;
-		border-top-right-radius: 10px;
+        background-color : rgb(203, 235, 216);
+/*     	border : 1px solid black; */
+    	border-radius: 10px;
+    	
     }
     
-    #main_user_tab_area>ul li a{
-    	text-align: center; 	
+    
+    #notice_new>a, #notice_liked>a{
+    	text-decoration: none;
+    	color: black;
+    	margin-left: 18px;
+    	font-size: 20px;
     }
     
-    li:hover{
-    	border-top: 1px solid #dee2e6;
-		border-left: 1px solid #dee2e6;
-		border-right: 1px solid #dee2e6;
-		border-top-left-radius:0.25rem;
-		border-top-right-radius:0.25rem; 
+    #notice_new:hover, #notice_liked:hover{
+    	backgroundcolor: rgb(203, 235, 216);
     }
-	
-	#link_active{
-		border-top: 1px solid #dee2e6;
-		border-left: 1px solid #dee2e6;
-		border-right: 1px solid #dee2e6; 
-		border-bottom: none;
-		border-top-left-radius:0.25rem;
-		border-top-right-radius:0.25rem;
-	}
-
+    
     /* 이름 바꿀예정 */
     .main_others{
-        border: 1px solid black;
+        border: 2px solid black;
         border-radius: 20px;
         width: 100%;
         height: 250px;
-        background-color: salmon;
     }
 
     /* 제목 */
     .main_ctn_title{
         float: left;
 		margin: 12px 0 0 25px;
-        font-size: 25px;
+        font-size: 30px;
+        font-weight: bold;
     }
     
     /* 플러스 아이콘 */
@@ -160,8 +149,7 @@
 
     /* 메인 왼쪽 전체 div */
     .content_right{
-        border: 1px solid black;
-        background-color: lightyellow;
+/*         background-color: lightyellow; */
         float: right;
         width: 350px;
         height: 100%;
@@ -170,33 +158,33 @@
 
     /* 일정 */
     .main_calender{
-        border: 1px solid black;
+        border: 2px solid black;
         width: 100%;
         height: 523px;
         border-radius: 20px;
-        background-color: thistle;
         margin-bottom: 26px;
     }
 
     /* 경조사 */
     .main_event{
-        border: 1px solid black;
+        border: 2px solid black;
         width: 100%;
         height: 250px;
         border-radius: 20px;
-        background-color: hotpink;
     }
     
+    /* 공지사항 테이블  */
     #mainNoticeList{
     	width: 750px;
     	margin: auto;
-    	font-size: 18px;
+    	font-size: 20px;
     }
     
+    /* 이메일 테이블  */
     #mainEmailList{
     	width: 750px;
     	margin: auto;
-    	font-size: 18px;
+    	font-size: 20px;
     }
 </style>
 </head>
@@ -206,8 +194,8 @@
         <div class="main_profile_area" align="center">
             <div id="main_profile">
                 <img src="https://i.imgur.com/hczKIze.jpg" alt="">
-                <p style="font-size: 30px; margin: 0 0 0 0;">권수지</p>
-                <p>개발1팀 / 사원</p>
+                <p style="font-size: 30px; margin: 0 0 0 0;">${loginUser.userName }</p>
+                <p>${loginUser.deptCode } / ${loginUser.jobCode }</p>
                 <div>
                     <a href="#">마이페이지</a>
                     <a href="#">로그아웃</a>
@@ -239,20 +227,30 @@
                 </div>
 
                 <div id="mp_work_output">
-                    <div style="margin-bottom: 4px;">
-                        <span>출근 시간</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>09:30</span>
+                    <div id="begin_time" style="margin-bottom: 4px;">
+                    	<div>
+                    		출근 시간 
+                    	</div>
+                    	<div>
+                    		${onTime }
+                    	</div>
                     </div>
                     <div style="border: 1px solid black; width: 280px;"></div>
-                    <div style="margin: 6px 0 12px 0;">
-                        <span>퇴근 시간</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span>09:30</span>
+                    <div id="end_time" style="margin: 6px 0 12px 0;">
+                    	<div>
+                    		퇴근 시간 
+                    	</div>
+                    	<div>
+                    		${offTime }
+                    	</div>
                     </div>
                 </div>
                 <div id="mp_work_input">
-                	<form action="insertGo.ar" method="post">
-	                    <button type="submit" class="btn btn-primary" style="margin-right: 20px;">출근</button>
+                	<form action="insertGo.ma" method="">
+	                    <button type="submit" class="btn btn-primary">출근</button>
                     </form>
                     
-                    <form action="insertLeave.ar" method="post">
+                    <form action="insertLeave.ma" method="">
 	                    <button type="submit" class="btn btn-primary">퇴근</button>
                     </form>
                 </div>
@@ -273,7 +271,7 @@
                     </div>
                 </div>
                 
-                <table id="mainEmailList" border=1 align="center">
+                <table id="mainEmailList"  align="center">
                 	<tbody>
                 	
                 	</tbody>
@@ -303,7 +301,7 @@
                     </div>
                 </div>
                 
-                <table id="mainNoticeList" border=1 align="center">
+                <table id="mainNoticeList" align="center">
                 	<tbody>
                 	</tbody>
                 </table>
@@ -321,6 +319,9 @@
                     </div>
                 </div>
 
+				<div>
+					<div></div>
+				</div>
             </div>
         </div>
 
@@ -422,14 +423,19 @@
 	   function mainEmailList() {
 		   $.ajax({
 			   url : "mainEmailList.ma",
+			   type : "POST",
+			   beforeSend : function(xhr)
+	            {
+	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },
 			   success : function(result) {
 				   var str = ""
 				   
 				   for(var i in result) {
 					   str += "<tr>"
-					   		+ "<td>" + result[i].emailTitle + "</td>"
-					   		+ "<td>" + result[i].sender + "</td>"
-					   		+ "<td>" + result[i].sendDate + "</td>"
+					   		+ "<td style='width:60%; '>" + result[i].emailTitle + "</td>"
+					   		+ "<td style='width:20%; text-align:right; '>" + result[i].sender + "</td>"
+					   		+ "<td style='width:20%; text-align:right;'>" + result[i].sendDate + "</td>"
 					   		+ "</tr>"
 				   }
 				   
@@ -444,20 +450,25 @@
 	   /* 공지사항 탭  */
 	    $(function() {
 	    	$("#notice_new").click(function(){
-// 	    		var activeTab = $(this).attr("data-tab");
-// 	    		$("#notice_new").css("background-color", "lightblue");
-// 	    		$(this).css("background-color", "blue");
+	    		var activeTab = $(this).attr("data-tab");
+ 	    		$("#notice_liked").css("background-color", "rgb(203, 235, 216)"); //모든 탭의 배경색 초기화
+	    		$(this).css("background-color", "#0E6251"); // 클릭한 탭의 배경색 변경
 	    		$.ajax({
 	 			   url : "mainNoticeList.ma",
+	 			   type : "POST",
+				   beforeSend : function(xhr)
+		            {
+		                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		            },
 	 			   success : function(result) {
 	 				   
 	 				   var str = "";
 	 				   
 	 				   for(var i in result) {
 	 					   str += "<tr>"
-	 					   		+ "<td>" + result[i].boardTitle + "</td>"
-	 					   		+ "<td>" + result[i].boardWriter + "</td>"
-	 					   		+ "<td>" + result[i].createDate + "</td>"
+	 					   		+ "<td style='width:60%; '>" + result[i].boardTitle + "</td>"
+	 					   		+ "<td style='width:20%; text-align:right; '>" + result[i].boardWriter + "</td>"
+	 					   		+ "<td style='width:20%; text-align:right;'>" + result[i].createDate + "</td>"
 	 					   		+ "</tr>"
 	 				   }
 	 				   
@@ -474,8 +485,16 @@
 	   
 	   $(function() {
 		   $("#notice_liked").click(function() {
+			   var activeTab = $(this).attr("data-tab");
+	    		$("#notice_new").css("background-color", "rgb(203, 235, 216)"); //모든 탭의 배경색 초기화
+	    		$(this).css("background-color", "#0E6251"); // 클릭한 탭의 배경색 변경
 			   $.ajax({
 				   url : "mainNoticeLiked.ma",
+				   type : "POST",
+				   beforeSend : function(xhr)
+		            {
+		                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		            },
 				   success : function(result) {
 					   console.log(result);
 					   var str ="";
