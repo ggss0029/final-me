@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
+import com.kh.final3.member.model.vo.Member;
 
 
 
@@ -23,5 +24,8 @@ public interface MainService {
 
 	int updateLeaveToWork(AttendanceRecord at);
 
+	ArrayList<Member> mainOthersTeamList(Member m);
+
+	ArrayList<Member> mainOthersAllList(Member m);
 
 }

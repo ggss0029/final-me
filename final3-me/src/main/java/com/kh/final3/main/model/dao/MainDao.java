@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
+import com.kh.final3.member.model.vo.Member;
 
 
 @Repository
@@ -33,8 +34,17 @@ public class MainDao {
 		return sqlSession.insert("mainMapper.insertGoToWork", at);
 	}
 
+	//퇴근 등록 
 	public int updateLeaveToWork(SqlSessionTemplate sqlSession, AttendanceRecord at) {
 		return sqlSession.update("mainMapper.updateLeaveToWork", at);
+	}
+
+	public ArrayList<Member> mainOthersTeamList(SqlSessionTemplate sqlSession, Member m) {
+		return (ArrayList)sqlSession.selectList("mainMapper.mainOthersTeamList",m);
+	}
+
+	public ArrayList<Member> mainOthersAllList(SqlSessionTemplate sqlSession, Member m) {
+		return (ArrayList)sqlSession.selectList("mainMapper.mainOthersAllList",m);
 	}
 
 
