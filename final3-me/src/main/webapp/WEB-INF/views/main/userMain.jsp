@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <!-- <link href="resources/css/User_main.css" rel="stylesheet"> -->
+
 <style>
 
 	.content{
@@ -165,7 +166,7 @@
     .content_right{
 /*         background-color: lightyellow; */
         float: right;
-        width: 350px;
+        width: 365px;
         height: 100%;
         
     }
@@ -174,7 +175,8 @@
     .main_calender{
         border: 2px solid black;
         width: 100%;
-        height: 523px;
+/*         height: 523px; */
+		height: 799px;
         border-radius: 20px;
         margin-bottom: 26px;
     }
@@ -210,6 +212,22 @@
     }
     
     #others_profile_table{
+    	margin: auto;
+    }
+    
+    #calendar {
+            width: 300px; /* 원하는 너비 값으로 변경 */
+            margin: 55px auto 10px auto; /* 가운데 정렬을 위해 추가 */
+        }
+    .fc-left h2{
+    	font-size: 15px;
+    }
+    
+    .fc-right button, .fc-button-group button{
+    	height: 10px;
+    }
+    
+    .main_calendar_info {
     	margin: auto;
     }
 </style>
@@ -258,7 +276,7 @@
                     		출근 시간 
                     	</div>
                     	<div>
-                    		${mainAt.onTime }
+                    		${onTime }
                     	</div>
                     </div>
                     <div style="border: 1px solid black; width: 280px;"></div>
@@ -267,7 +285,7 @@
                     		퇴근 시간 
                     	</div>
                     	<div>
-                    		${mainAt.offTime}
+                    		${offTime}
                     	</div>
                     </div>
                 </div>
@@ -343,34 +361,70 @@
                 </table>
             </div>
 
-            <div class="main_others">
-                <div>
-                    <div class="main_ctn_title">
-                        <span>임직원 조회 </span>
-                    </div>
-                    <div id="main_user_tab_area">
-	                    <ul id="nav-tabs">
-							<li class="nav-item" id="others_team" data-tab="mainOthersTemaList">
-							    <a class="nav-link active" id="link_active" aria-current="page" href="#">Team </a>
-							</li>
-							<li class="nav-item" id="others_all" data-tab="mainOthersAllList">
-							    <a class="nav-link" href="#" id="link_active">All </a>
-							</li>
-						</ul>
-                    </div>
-                    <div class="main_ctn_plus">
-                        <a href="#">
-                            <i class="fa-solid fa-plus fa-2xl" style="color: #0e6251;"></i>
-                        </a>
-                    </div>
-                </div>
-
-				<table id="mainOthersList"  align="center">
-					<tbody>
-						
-					</tbody>
-				</table>
-            </div>
+			<c:choose>
+				<c:when test="${loginUser.auth == 'ROLE_MEMBER'}">
+		            <div class="main_others">
+		                <div>
+		                    <div class="main_ctn_title">
+		                        <span>임직원 조회 </span>
+		                    </div>
+		                    <div id="main_user_tab_area">
+			                    <ul id="nav-tabs">
+									<li class="nav-item" id="others_team" data-tab="mainOthersTemaList">
+									    <a class="nav-link active" id="link_active" aria-current="page" href="#">Team </a>
+									</li>
+									<li class="nav-item" id="others_all" data-tab="mainOthersAllList">
+									    <a class="nav-link" href="#" id="link_active">All </a>
+									</li>
+								</ul>
+		                    </div>
+		                    <div class="main_ctn_plus">
+		                        <a href="#">
+		                            <i class="fa-solid fa-plus fa-2xl" style="color: #0e6251;"></i>
+		                        </a>
+		                    </div>
+		                </div>
+		
+						<table id="mainOthersList"  align="center">
+							<tbody>
+								
+							</tbody>
+						</table>
+		            </div>
+				</c:when>
+				
+				<c:otherwise>
+					<div class="main_others">
+		                <div>
+		                    <div class="main_ctn_title">
+		                        <span>전자 결재  </span>
+		                    </div>
+		                    <div id="main_user_tab_area">
+			                    <ul id="nav-tabs">
+									<li class="nav-item" id="others_team" data-tab="mainOthersTemaList">
+									    <a class="nav-link active" id="link_active" aria-current="page" href="#">Team </a>
+									</li>
+									<li class="nav-item" id="others_all" data-tab="mainOthersAllList">
+									    <a class="nav-link" href="#" id="link_active">All </a>
+									</li>
+								</ul>
+		                    </div>
+		                    <div class="main_ctn_plus">
+		                        <a href="#">
+		                            <i class="fa-solid fa-plus fa-2xl" style="color: #0e6251;"></i>
+		                        </a>
+		                    </div>
+		                </div>
+		
+						<table id="mainOthersList"  align="center">
+							<tbody>
+								
+							</tbody>
+						</table>
+		            </div>
+				</c:otherwise>
+			</c:choose>
+			
         </div>
 
         <!-- 메인 오른쪽 부분 -->
@@ -386,15 +440,33 @@
                         </a>
                     </div>
                 </div>
+                <div id="calendar"></div>
+                <table class="main_calendar_info" border=1>
+                	<tbody>
+                		<tr>
+                			<td style="font-size:35px;">오늘의 일정</td>
+                		</tr>
+                		<tr>
+                			<td>
+                				<ul>
+                					<li>뭐시기1 </li>
+                					<li>뭐시기2 </li>
+                					<li>뭐시기3 </li>
+                					<li>뭐시기4 </li>
+                				</ul>
+                			</td>
+                		</tr>
+                	</tbody>
+                </table>
             </div>
 
-            <div class="main_event">
-                <div>
-                    <div class="main_ctn_title">
-                        <span>경조사</span>
-                    </div>
-                </div>
-            </div>
+<!--             <div class="main_event"> -->
+<!--                 <div> -->
+<!--                     <div class="main_ctn_title"> -->
+<!--                         <span>경조사</span> -->
+<!--                     </div> -->
+<!--                 </div> -->
+<!--             </div> -->
         </div>
     </div>
     
@@ -407,7 +479,7 @@
 					<h4 class="modal-title" id="myModalLabel">정보</h4>
 				</div>
 				<div class="modal-body" id="other_profile_body">
-					<table border=1 id="others_profile_table">
+					<table border=1 id="others_profile_table" class="table">
 						<tbody>
 						</tbody>
 					</table>
@@ -461,26 +533,14 @@
 	   $(function() {
 		  
 		  mainEmailList();
-		   
-// 		  $(document).on("click","#mainNoticeList>tbody",function() {
-// 			  console.log($(this).children().eq(0).text());
-// 			  var boardNo = $(this).children().eq(0).text();
-// 			  location.href="detail.no?boardNo="+boardNo;
-// 		  })
 		  
 		  $("#mainNoticeList>tbody").on("click","tr", function() {
 			  //console.log($(this).children().eq(0).children().val());
 			  var boardNo = $(this).children().eq(0).children().val();
 			  location.href="detail.no?boardNo="+boardNo;
 		  })
-// 		  $(document).on("click","#mainNoticeList>tbody",function() {
-// 			  console.log($(this).children().eq(0).text());
-// 			  var boardNo = $(this).children().eq(0).text();
-// 			  location.href="detail.no?boardNo="+boardNo;
-// 		  })
 	   });
 	   
-	   //location.href='detail.no?boardNo=${n.boardNo }
 	   /* function mainNoticeBoardList() {
 		   $.ajax({
 			   url : "mainNoticeList.ma",
@@ -527,6 +587,7 @@
 	   }
 	   
 	   /* 공지사항 탭  */
+	   /* 공지사항 최신 순 탭  */
 	    $(function() {
 	    	$("#notice_new").click(function(){
 	    		var activeTab = $(this).attr("data-tab");
@@ -558,6 +619,7 @@
 	    		$("#notice_new").click();
 	    });
 	   
+	   /* 공지사항 즐겨찾기한 탭  */
 	   $(function() {
 		   $("#notice_liked").click(function() {
 			   var activeTab = $(this).attr("data-tab");
@@ -641,8 +703,8 @@
 								"<tr><td>직급</td><td>" + jobName + "</td></tr>" +
 								"<tr><td>부서</td><td>" + deptName + "</td></tr>" +
 								"<tr><td>전화번호</td><td>" + phone + "</td></tr>" +
-								"<tr><td>이메일</td><td>" + email + "</td></tr>" +
-								"<tr><td>이메일</td><td>" + empolymentDate + "</td></tr>" 
+								"<tr><td>이메일</td><td>" + email + "</td></tr>"
+								+"<tr><td>입사일 </td><td>" + empolymentDate + "</td></tr>" 
 							);
 					   })
 				   },
@@ -663,6 +725,11 @@
 			   $(this).css({"background-color": "#0E6251", "color":"white"});
 			   $.ajax({
 				   url : "mainOthersAllList.ma",
+				   type : "POST",
+				   beforeSend : function(xhr)
+		            {
+		                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		            },
 				   success : function(result){
 					   var str = "";
 				        var rowCount = 0;
@@ -680,8 +747,8 @@
 				          		+ result[i].jobName 
 				          		+ "<input type = 'hidden' value='"+result[i].phone+"'>"
 				          		+ "<input type = 'hidden' value='"+result[i].email+"'>"
-				          		+ "<input type = 'hidden' value='"+result[i].empolymentDate+"'></p>"
-				          		+ "</td>";
+				          		+ "<input type = 'hidden' value='"+result[i].empolymentDate+"'>"
+				          		+ "</p></td>";
 				          
 				          if (i % 5 === 4 || i === result.length - 1) {
 				            str += "</tr>";
@@ -707,8 +774,8 @@
 								"<tr><td>직급</td><td>" + jobName + "</td></tr>" +
 								"<tr><td>부서</td><td>" + deptName + "</td></tr>" +
 								"<tr><td>전화번호</td><td>" + phone + "</td></tr>" +
-								"<tr><td>이메일</td><td>" + email + "</td></tr>" +
-								"<tr><td>이메일</td><td>" + empolymentDate + "</td></tr>" 
+								"<tr><td>이메일</td><td>" + email + "</td></tr>" 
+								+"<tr><td>입사일 </td><td>" + empolymentDate + "</td></tr>" 
 							);
 					   })
 					   
@@ -720,6 +787,62 @@
 		   });
 		   
 	   });
+	   
+	   
+	   //$(function() { }) <- 이렇게 해도된다.
+	   $(document).ready(function() {
+           $('#calendar').fullCalendar({
+         	   height: 488,
+               //contentHeight: 400,
+               expandRows: true, //화면에 맞게 높이 재설정 
+               local: "ko", //달력의 언어설정 = 한국어 
+               timezone: "local", //시간대 설정 = 로컬 
+               nextDayThreshold: "09:00:00", //다음 날로 간주되는 시간 = 09:00:00 
+               displayEventTime: true, //이벤트의 시간 표시 
+               selectable: true, //사용자가 날짜를 선택할 수 있도록 함 
+               eventLimit: true, //이벤트 제한 활성화 
+               fixedWeekCount: false, //달력 한줄 없애기 
+               editable: false, //달력의 이벤트를 편집할수 없도록 하기 
+               displayEventTime: false, //이벤트 시간을 표시 하지 않기 
+               weekNumberCalculation : "ISO",
+               dayClick: function(date, allDay) {},
+               eventClick: function(info) {
+            	   //var eventTitle = info.
+               },
+               
+               select: function(start, end, allDay) {},
+        	   events: function(start, end, timezone, callback) {
+	        	   // 백엔드에서 일정 데이터를 조회하는 비동기 요청(AJAX 등)을 수행합니다.
+	        	   $.ajax({
+	        	   url: "mainCalendar.ma", // 일정 데이터를 가져올 API 엔드포인트 URL
+	        	   success: function(list) {
+	        		   var events = [];
+	        		   //console.log(list);
+	        		  $.each(list, function(index, schedule) {
+	        		//list.forEach(function(schedule) {
+	        			  var event =  {
+	        					  id: schedule.deptSchedule_No,
+	        					  deptCode : schedule.deptCode,
+	        					  title : schedule.scheduleTitle,
+	        					  content : schedule.scheduleContent,
+	        					  start : schedule.startDate,
+	        					  end : schedule.endDate
+	        			  }
+	        			  
+	        			  events.push(event);
+	        			  //console.log(events);
+	        			})
+	        		  //$('#calendar').fullCalendar('render');
+	        		  callback(events);
+	        	   },
+	        	   error: function() {
+	        	   		console.log('통신 오류 ');
+	        	   }
+	        	   });
+        	   }
+           });
+       });
+	   
     </script>
 </body>
 </html>
