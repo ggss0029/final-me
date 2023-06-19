@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-		<jsp:forward page="WEB-INF/views/member/loginForm.jsp"></jsp:forward>
+	 <%@include file="menubar.jsp" %>
+	<h1>에러페이지 : ${errorMsg }</h1>
+	
 </body>
 </html>
