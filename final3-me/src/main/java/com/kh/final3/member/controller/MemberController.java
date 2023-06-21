@@ -25,7 +25,7 @@ public class MemberController {
 	public ModelAndView loginMember(Member m, HttpSession session, ModelAndView mv) {
 
 		Member loginUser = memberService.loginMember(m);
-		System.out.println(loginUser);
+		//System.out.println(loginUser);
 
 		if (loginUser == null) {
 			mv.addObject("errorMsg", "로그인 실패");

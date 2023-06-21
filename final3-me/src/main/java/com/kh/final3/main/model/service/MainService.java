@@ -3,6 +3,7 @@ package com.kh.final3.main.model.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
@@ -34,4 +35,5 @@ public interface MainService {
 
 	ArrayList<Schedule> mainDailyEvents(Map<String, Object> params);
 
+	ArrayList<Approval> mainApprovalStatus(Member m);
 }
