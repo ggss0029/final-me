@@ -6,6 +6,7 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
@@ -55,6 +56,11 @@ public class MainDao {
 
 	public ArrayList<Schedule> mainDailyEvents(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainDailyEvents", params);
+	}
+	
+	public ArrayList<Approval> mainApprovalStatus(SqlSessionTemplate sqlSession, Member m) {
+		System.out.println((ArrayList)sqlSession.selectList("mainMapper.mainApprovalStatus", m));
+		return (ArrayList)sqlSession.selectList("mainMapper.mainApprovalStatus", m);
 	}
 
 

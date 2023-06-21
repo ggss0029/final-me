@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
+import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
@@ -54,9 +55,9 @@ public class MainController {
 	@RequestMapping(value="mainNoticeLiked.ma", produces="application/json; charset=UTF-8")
 	public String mainNoticeLikedList(HttpSession session) {
 		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
-		System.out.println(userId);
+		//System.out.println(userId);
 		ArrayList<Board> mainNoticeLiked = mainService.mainNoticeLikedList(userId);
-		System.out.println(mainNoticeLiked);
+		//System.out.println(mainNoticeLiked);
 		return new Gson().toJson(mainNoticeLiked);
 	}
 	
@@ -144,6 +145,7 @@ public class MainController {
 		return new Gson().toJson(list);
 	}
 	
+	//선택한 날짜 일정 조회 
 	@ResponseBody
 	@RequestMapping(value="mainDailyEvents.ma", method = RequestMethod.POST)
 	public ArrayList<Schedule> mainDailyEvents(@RequestParam("year") int year, @RequestParam("month") int month, @RequestParam("date") int date) {
@@ -155,6 +157,16 @@ public class MainController {
 		ArrayList<Schedule> events = mainService.mainDailyEvents(params);
 		//System.out.println(events);
 		return events;
+	}
+	
+	//전자결재 리스트 조회 
+	@ResponseBody
+	@RequestMapping(value="mainApprovalStatus.ma", produces="application/json; charset=UTF-8")
+	public String mainApprovalStatus(HttpSession session) {
+		Member m = ((Member)session.getAttribute("loginUser"));
+		ArrayList<Approval> aList = mainService.mainApprovalStatus(m);
+		//System.out.println(aList);
+		return new Gson().toJson(aList);
 	}
 	
 }

@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.AttendanceRecord;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
@@ -73,6 +74,13 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public ArrayList<Schedule> mainDailyEvents(Map<String, Object> params) {
 		return mainDao.mainDailyEvents(sqlSession, params);
+	}
+	
+	//전자결재 리스트 조회 
+	@Override
+	public ArrayList<Approval> mainApprovalStatus(Member m) {
+			
+		return mainDao.mainApprovalStatus(sqlSession, m);
 	}
 
 }

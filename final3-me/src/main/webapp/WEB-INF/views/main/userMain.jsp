@@ -205,6 +205,12 @@
 	text-align: center;
 }
 
+#mainApprovalList {
+	width: 750px;
+	margin: auto;
+	font-size: 20px;
+}
+
 #others_profile_table {
 	margin: auto;
 }
@@ -384,16 +390,6 @@
 							<div class="main_ctn_title">
 								<span>전자 결재 </span>
 							</div>
-							<div id="main_user_tab_area">
-								<ul id="nav-tabs">
-									<li class="nav-item" id="others_team"
-										data-tab="mainOthersTemaList"><a class="nav-link active"
-										id="link_active" aria-current="page" href="#">Team </a></li>
-									<li class="nav-item" id="others_all"
-										data-tab="mainOthersAllList"><a class="nav-link" href="#"
-										id="link_active">All </a></li>
-								</ul>
-							</div>
 							<div class="main_ctn_plus">
 								<a href="#">
 									<i class="fa-solid fa-plus fa-2xl"style="color: #0e6251;"></i>
@@ -401,7 +397,7 @@
 							</div>
 						</div>
 
-						<table id="mainOthersList" align="center">
+						<table id="mainApprovalList" align="center">
 							<tbody>
 
 							</tbody>
@@ -509,6 +505,7 @@
 		$(function() {
 
 			mainEmailList();
+			mainApprovalStatusList(); //전자결재 호출 
 
 			$("#mainNoticeList>tbody").on("click", "tr", function() {
 				//console.log($(this).children().eq(0).children().val());
@@ -947,6 +944,43 @@
 				});
 			}
 		});
+			
+	
+		//전자결재 상태
+		function mainApprovalStatusList() {
+			$.ajax({
+				url : "mainApprovalStatus.ma",
+				success : function(result){
+					//console.log(result);
+					var str = "";
+					
+					for(var i in result) {
+						if(result[i].lastSignature.includes("대기")){
+							str += "<tr>"
+								+"<td style='width:60%;'>"+result[i].docTitle+"</td>"
+								+"<td style='width:20%; text-align:right;'>"+result[i].createDate+"<td>"
+								+"<td style='width:20%; text-align:right; color:gold; font-weight:bold;'>"+result[i].lastSignature+"</td>";
+						}else if (result[i].lastSignature.includes("반려")) {
+							str += "<tr>"
+								+"<td style='width:60%;'>"+result[i].docTitle+"</td>"
+								+"<td style='width:20%; text-align:right;'>"+result[i].createDate+"<td>"
+								+"<td style='width:20%; text-align:right; color:red; font-weight:bold;'>"+result[i].lastSignature+"</td>";
+						}else if (result[i].lastSignature.includes("승인")) {
+							str += "<tr>"
+								+"<td style='width:60%;'>"+result[i].docTitle+"</td>"
+								+"<td style='width:20%; text-align:right;'>"+result[i].createDate+"<td>"
+								+"<td style='width:20%; text-align:right; color:lightgreen; font-weight:bold;'>"+result[i].lastSignature+"</td>";
+						}
+					}
+					
+					$("#mainApprovalList tbody").html(str);
+				},
+				error : function() {
+					console.log("전자결재 조회 통신오류 ");
+				}
+			});
+		}
+		
 	</script>
 </body>
 </html>
