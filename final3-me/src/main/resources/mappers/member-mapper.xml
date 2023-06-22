@@ -7,6 +7,7 @@
 	
 	<!-- type에는 반환할 타입을 적는 것이다. mybatis-config의 알리아스 설정해 뒀으면 member가능  -->
   	<resultMap type="member" id="memberResultSet">
+  		<result column="USER_NO" property="userNo"/>
   		<result column="USER_ID" property="userId"/>
   		<result column="USER_PWD" property="userPwd"/>
   		<result column="USER_NAME" property="userName"/>
