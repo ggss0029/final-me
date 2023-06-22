@@ -17,156 +17,193 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.kh.final3.approval.model.vo.Approval;
-import com.kh.final3.attendance.model.vo.AttendanceRecord;
+import com.kh.final3.attendance.model.vo.Attendance;
 import com.kh.final3.board.model.vo.Board;
 import com.kh.final3.email.model.vo.Email;
 import com.kh.final3.main.model.service.MainService;
 import com.kh.final3.member.model.vo.Member;
 import com.kh.final3.schedule.model.vo.Schedule;
+import com.kh.final3.todo.model.vo.Todo;
 
 @Controller
 public class MainController {
-	
+
 	@Autowired
 	private MainService mainService;
+	
+	@Autowired
+	private Todo td;
 
-	//사용자 메인페이지 이동 
+	// 사용자 메인페이지 이동
 	@RequestMapping("home.ma")
 	public String MainHome() {
 		return "main/userMain";
 	}
-	
-	//관리자 메인페이지 이동 
+
+	// 관리자 메인페이지 이동
 	@RequestMapping("adminHome.ma")
 	public String adminMain() {
 		return "main/adminMain";
 	}
-	
-	//최근 공지 불러오기 
+
+	// 최근 공지 불러오기
 	@ResponseBody
-	@RequestMapping(value="mainNoticeList.ma", produces="application/json; charset=UTF-8")
+	@RequestMapping(value = "mainNoticeList.ma", produces = "application/json; charset=UTF-8")
 	public String mainNoticeList() {
 		ArrayList<Board> mainNotice = mainService.mainNoticeList();
 		return new Gson().toJson(mainNotice);
 	}
-	
-	//즐겨찾기  공지 불러오기 
+
+	// 즐겨찾기 공지 불러오기
 	@ResponseBody
-	@RequestMapping(value="mainNoticeLiked.ma", produces="application/json; charset=UTF-8")
+	@RequestMapping(value = "mainNoticeLiked.ma", produces = "application/json; charset=UTF-8")
 	public String mainNoticeLikedList(HttpSession session) {
-		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
-		//System.out.println(userId);
+		String userId = ((Member) session.getAttribute("loginUser")).getUserId();
+		// System.out.println(userId);
 		ArrayList<Board> mainNoticeLiked = mainService.mainNoticeLikedList(userId);
-		//System.out.println(mainNoticeLiked);
+		// System.out.println(mainNoticeLiked);
 		return new Gson().toJson(mainNoticeLiked);
 	}
-	
-	
-	//메일 불러오기
+
+	// 메일 불러오기
 	@ResponseBody
-	@RequestMapping(value="mainEmailList.ma", produces="application/json; charseet=UTF-8")
+	@RequestMapping(value = "mainEmailList.ma", produces = "application/json; charseet=UTF-8")
 	public String mainEmailList(HttpSession session) {
-		String userId = ((Member)session.getAttribute("loginUser")).getUserId();
+		String userId = ((Member) session.getAttribute("loginUser")).getUserId();
 //		System.out.println(userId);
 		ArrayList<Email> mainEmail = mainService.mainEmailList(userId);
 //		System.out.println(mainEmail);
-		
+
 		return new Gson().toJson(mainEmail);
 	}
-	
+
 	//출근등록 
-	@PostMapping("insertGo.ma")
-	//@RequestMapping("insertGo.ma")
-	//@RequestMapping(value="insertGo.ma", method=RequestMethod.POST)
-	public String insertGoToWork(AttendanceRecord at, HttpSession session, RedirectAttributes rttr) {
-		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
-		
-		at.setUserNo(userNo);
-		
-		int result = mainService.insertGoToWork(at);
-		
-		if(result > 0) {
-			rttr.addFlashAttribute("onTime",at.getOnTime());
-			session.setAttribute("alertMsg", "출근 성공!");
-		}else {
-			session.setAttribute("alertMsg", "출근 실패! ");
+		@PostMapping("insertGo.ma")
+		//@RequestMapping("insertGo.ma")
+		//@RequestMapping(value="insertGo.ma", method=RequestMethod.POST)
+		public String insertGoToWork(Attendance at, HttpSession session, RedirectAttributes rttr) {
+			int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+			
+			at.setUserNo(userNo);
+			
+			int result = mainService.insertGoToWork(at);
+			
+			if(result > 0) {
+				rttr.addFlashAttribute("onTime",at.getOnTime());
+				session.setAttribute("alertMsg", "출근 성공!");
+			}else {
+				session.setAttribute("alertMsg", "출근 실패! ");
+			}
+			return "redirect:/mainPage.me";
 		}
-		return "redirect:/member/home.ma";
-	}
-	
-	//퇴근 등록 
-	//@RequestMapping("insertLeave.ma")
-	@RequestMapping(value="insertLeave.ma", method=RequestMethod.POST)
-	public String updateLeaveToWork(AttendanceRecord at, HttpSession session, RedirectAttributes rttr) {
-		int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
 		
-		at.setUserNo(userNo);
-		
-		int result = mainService.updateLeaveToWork(at);
-		
-		if(result > 0) {
-			rttr.addFlashAttribute("onTime",at.getOnTime());
-			session.setAttribute("alertMsg", "퇴근 성공!");
-		}else {
-			session.setAttribute("alertMsg", "퇴근 실패! ");
+		//퇴근 등록 
+		//@RequestMapping("insertLeave.ma")
+		@RequestMapping(value="insertLeave.ma", method=RequestMethod.POST)
+		public String updateLeaveToWork(Attendance at, HttpSession session, RedirectAttributes rttr) {
+			int userNo = ((Member)session.getAttribute("loginUser")).getUserNo();
+			
+			at.setUserNo(userNo);
+			
+			int result = mainService.updateLeaveToWork(at);
+			
+			if(result > 0) {
+				rttr.addFlashAttribute("onTime",at.getOnTime());
+				session.setAttribute("alertMsg", "퇴근 성공!");
+			}else {
+				session.setAttribute("alertMsg", "퇴근 실패! ");
+			}
+			return "redirect:/mainPage.me";
 		}
-		return "redirect:/member/home.ma";
-	}
-	
-	//임직원조회(Team)
+
+	// 임직원조회(Team)
 	@ResponseBody
-	@RequestMapping(value="mainOthersTeamList.ma", produces="application/json; charset=UTF-8" )
+	@RequestMapping(value = "mainOthersTeamList.ma", produces = "application/json; charset=UTF-8")
 	public String mainOthersTeamList(HttpSession session) {
-		Member m = ((Member)session.getAttribute("loginUser"));
+		Member m = ((Member) session.getAttribute("loginUser"));
 
 		ArrayList<Member> mainMemberTeam = mainService.mainOthersTeamList(m);
-		
+
 		return new Gson().toJson(mainMemberTeam);
 	}
-	
-	//임직원조회(Team)
+
+	// 임직원조회(Team)
 	@ResponseBody
-	@RequestMapping(value="mainOthersAllList.ma", produces="application/json; charset=UTF-8" )
+	@RequestMapping(value = "mainOthersAllList.ma", produces = "application/json; charset=UTF-8")
 	public String mainOthersAllList(HttpSession session) {
-		Member m = ((Member)session.getAttribute("loginUser"));
+		Member m = ((Member) session.getAttribute("loginUser"));
 
 		ArrayList<Member> mainMemberTeam = mainService.mainOthersAllList(m);
-			
+
 		return new Gson().toJson(mainMemberTeam);
 	}
-	
-	//풀 캘린더에서 일정조회 
+
+	// 풀 캘린더에서 일정조회
 	@ResponseBody
-	@RequestMapping(value="mainCalendar.ma", produces="application/json; charset=UTF-8")
+	@RequestMapping(value = "mainCalendar.ma", produces = "application/json; charset=UTF-8")
 	public String mainCalendarList(HttpSession session) {
-		String deptCode = ((Member)session.getAttribute("loginUser")).getDeptCode();
-		
+		String deptCode = ((Member) session.getAttribute("loginUser")).getDeptCode();
+
 		ArrayList<Schedule> list = mainService.mainCalendarList(deptCode);
+		System.out.println(list);
 		return new Gson().toJson(list);
 	}
-	
-	//선택한 날짜 일정 조회 
+
+	// 선택한 날짜 일정 조회
 	@ResponseBody
-	@RequestMapping(value="mainDailyEvents.ma", method = RequestMethod.POST)
-	public ArrayList<Schedule> mainDailyEvents(@RequestParam("year") int year, @RequestParam("month") int month, @RequestParam("date") int date) {
+	@RequestMapping(value = "mainDailyEvents.ma", method = RequestMethod.POST)
+	public ArrayList<Schedule> mainDailyEvents(@RequestParam("year") int year, @RequestParam("month") int month,
+			@RequestParam("date") int date) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("year", year);
 		params.put("month", month);
 		params.put("date", date);
-		
+
 		ArrayList<Schedule> events = mainService.mainDailyEvents(params);
-		//System.out.println(events);
+		// System.out.println(events);
 		return events;
 	}
-	
-	//전자결재 리스트 조회 
+
+	// 전자결재 리스트 조회
 	@ResponseBody
-	@RequestMapping(value="mainApprovalStatus.ma", produces="application/json; charset=UTF-8")
+	@RequestMapping(value = "mainApprovalStatus.ma", produces = "application/json; charset=UTF-8")
 	public String mainApprovalStatus(HttpSession session) {
-		Member m = ((Member)session.getAttribute("loginUser"));
+		Member m = ((Member) session.getAttribute("loginUser"));
 		ArrayList<Approval> aList = mainService.mainApprovalStatus(m);
-		//System.out.println(aList);
+		// System.out.println(aList);
 		return new Gson().toJson(aList);
 	}
-	
+
+	// 투두리스트 입력
+	@ResponseBody
+	@RequestMapping(value = "mainInsertTodo.ma", method = RequestMethod.POST)
+	public String mainInsertTodo(HttpSession session, String todoContent) {
+		Member m = ((Member) session.getAttribute("loginUser"));
+		int userNo = m.getUserNo();
+
+		// Todo td = new Todo();
+		td.setUserNo(userNo);
+		td.setTodoContent(todoContent);
+
+		int result = mainService.mainInsertTodo(td);
+		System.out.println(result);
+
+		if (result > 0) {
+			return "success";
+		} else {
+			return "fail";
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "selectTodoList.ma", produces = "application/json; charset=UTF-8")
+	public String mainSelectTodoList(HttpSession session, int userNo) {
+		Member m = ((Member) session.getAttribute("loginUser"));
+		m.setUserNo(userNo);
+
+		ArrayList<Todo> list = mainService.mainSelectTodoList(m);
+
+		return new Gson().toJson(list);
+	}
+
 }

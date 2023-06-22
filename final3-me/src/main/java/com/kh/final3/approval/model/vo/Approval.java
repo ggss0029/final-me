@@ -29,4 +29,5 @@ public class Approval {
 	
 	private String docTitle; //
 	private String createDate;
+	private String docName;
 }
