@@ -66,12 +66,30 @@ public class MainDao {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainApprovalStatus", m);
 	}
 
+	//투두리스트 등록
 	public int mainInsertTodo(SqlSessionTemplate sqlSession, Todo td) {
 		return sqlSession.insert("mainMapper.mainInsertTodo", td);
 	}
 
+	//투두리스트 조회
 	public ArrayList<Todo> mainSelectTodoList(SqlSessionTemplate sqlSession, Member m) {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainSelectTodoList", m);
+	}
+	
+	//투두리스트 수정
+	public int updateTodoList(SqlSessionTemplate sqlSession, Todo td) {
+		//System.out.println(sqlSession.update("mainMapper.updateTodoList", td));
+		return sqlSession.update("mainMapper.updateTodoList", td);
+	}
+
+	//투두리스트 한개 삭제
+	public int deleteTodoList(SqlSessionTemplate sqlSession, int todoNo) {
+		return sqlSession.update("mainMapper.deleteTodoList", todoNo);
+	}
+
+	//투두리스트 전체 삭제
+	public int allDeleteTodoList(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.update("mainMapper.allDeleteTodoList", m);
 	}
 
 

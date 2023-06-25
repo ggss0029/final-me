@@ -46,9 +46,20 @@ public interface MainService {
 
 	ArrayList<Approval> mainApprovalStatus(Member m);
 
+	//투두리스트 등록
 	int mainInsertTodo(Todo td);
 
+	//투두리스트 조회
 	ArrayList<Todo> mainSelectTodoList(Member m);
+
+	//투두리스트 수정
+	int updateTodoList(Todo td);
+	
+	//투두리스트 한개 삭제 
+	int deleteTodoList(int todoNo);
+
+	//투두리스트 전체 삭제 
+	int allDeleteTodoList(Member m);
 
 
 }
