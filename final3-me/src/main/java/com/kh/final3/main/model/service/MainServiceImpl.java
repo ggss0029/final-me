@@ -86,14 +86,34 @@ public class MainServiceImpl implements MainService {
 		return mainDao.mainApprovalStatus(sqlSession, m);
 	}
 
+	//투두리스트 등록
 	@Override
 	public int mainInsertTodo(Todo td) {
 		return mainDao.mainInsertTodo(sqlSession,td);
 	}
 
+	//투두리스트 조회
 	@Override
 	public ArrayList<Todo> mainSelectTodoList(Member m) {
 		return mainDao.mainSelectTodoList(sqlSession, m);
+	}
+
+	//투두리스트 수정
+	@Override
+	public int updateTodoList(Todo td) {
+		return mainDao.updateTodoList(sqlSession, td);
+	}
+	
+	//투두리스트 한개 삭제
+	@Override
+	public int deleteTodoList(int todoNo) {
+		return mainDao.deleteTodoList(sqlSession, todoNo);
+	}
+
+	//투두리스트 전체 삭제
+	@Override
+	public int allDeleteTodoList(Member m) {
+		return mainDao.allDeleteTodoList(sqlSession, m);
 	}
 
 

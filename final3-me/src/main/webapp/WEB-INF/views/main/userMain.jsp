@@ -1111,13 +1111,16 @@
         function mainAddTodo() {
         	$.ajax({
         		url : "mainInsertTodo.ma",
-        		type : "POST",
         		data : {
-        			todoContent : $("#main_todo_value").val()
+        			todoContent : $("#main_todo_value").val(),
         		},
+        		type : "POST",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
         		success: function(result) {
-        			console.log(result);
-        			selectTodoList(); //리스트 갱신 
+        			//console.log(result);
+        			selectTodoList(); //리스트 갱신 -> append로 하는게 더 효율적(시도 해봤는데 undefined 뜸.. 나중에 ..)
         			$("#main_todo_value").val(""); //비워주기
         			$("#main_todo_value").focus();
         		},
@@ -1127,90 +1130,163 @@
         	});
         }
 		
-		//투두리스트 조회 
+		//투두리스트 조회 및 체크박스 클릭 이벤트 
 		function selectTodoList() {
 			$.ajax({
 				url: "selectTodoList.ma",
 				data: {
 					userNo : "${loginUser.userNo}"
 				},
+				type : "POST",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
 				success: function(result) {
-					console.log(result);
+					var str = "";
+					for(var i in result) {
+						str += "<li>"
+							+ "<div id='main_result_div'>"
+							+ "<input type='hidden' id='mainTodoNo' value='" + result[i].todoNo + "'>"
+							+ "<input type='hidden' id='mainUserNo' value='" + result[i].userNo + "'>"
+							+ "<input type='hidden' id='mainTodoStatus' value='" + result[i].status + "'>"
+							+ "<input type='checkbox' id='todoLabel"+i+"' class='todoCheck' style='float:left;' value='"+result[i].todoContent + "'>"
+							+ "<label id='todoLabelId' for='todoLabel"+i+"'>" + result[i].todoContent + "</label>"
+							+ "<button class='delete_btn' onclick='deleteTodoList();'> x</button>"
+							+ "</div>"
+							+ "</li>";
+					}
+					$("#mainAddTodo ul").html(str);
+					
+					//조회할 때 디비에 클릭된 것 체크되어있게 하기 
+					$("input[type = checkbox]").each(function(){
+						//console.log($(this).val());
+						var status = $(this).parent().find('#mainTodoStatus').val();
+						//console.log($(this).parent().find('#mainTodoStatus').val());
+						var label = $(this).next("label")
+						console.log(label);
+						if(status == "C") {
+							$(this).attr("checked", true);
+							label.css("color", "lightgray");
+		                    label.css("textDecoration","line-through");
+						}
+					});
+					
+					//체크시 디비 바뀌고 css 효과 주는 것 
+					$("input[type = checkbox]").click(function() {
+						var todoNo = $(this).parent().find('#mainTodoNo').val();
+						var status = $(this).parent().find('#mainTodoStatus').val();
+						var content = $(this).val();
+						
+						updateTodoList(todoNo, status, content, $(this).is(":checked"));
+					});
+					
 				},
 				error: function() {
 					console.log("투두 조회 오류 ");
 				}
-			})
+			});
+		}
+		
+		//투두리스트 수정 
+		function updateTodoList(todoNo, status, content, isChecked) {
+			var label = $("input[type=checkbox][value='" + content + "']").next("label");
+			//console.log(label);
+			if (isChecked) {
+		        label.css("color", "lightgray");
+		        label.css("textDecoration", "line-through");
+		        status = "N";
+		        $.ajax({
+	 				url: "updateTodoList.ma",
+	 				data: {
+	 					todoNo : todoNo,
+	 					status : status
+	 				},
+	 				type: "POST",
+	 			    beforeSend: function(xhr) {
+	 			      xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	 			    },
+	 			    success: function(result) {
+				    	//console.log(result);
+	 			    },
+	 			    error: function() {
+	 					console.log("투두 수정 오류 ");
+	 				}
+	 			});
+		    } else {
+		        label.css("color", "black");
+		        label.css("textDecoration", "none");
+		        status = "C";
+				$.ajax({
+	 				url: "updateTodoList.ma",
+	 				data: {
+	 					todoNo : todoNo,
+	 					status : status
+	 				},
+	 				type: "POST",
+	 			    beforeSend: function(xhr) {
+	 			      xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	 			    },
+	 			    success: function(result) {
+				    	//console.log(result);
+	 			    },
+	 			    error: function() {
+	 					console.log("투두 수정 오류 ");
+	 				}
+	 			});
+		    }
 			
 		}
+		
+		//투두리스트 한개만 삭제 
+		function deleteTodoList() {
+			$.ajax({
+				url : "deleteTodoList.ma",
+				data : {
+					todoNo : $("#mainTodoNo").val()
+				},
+				type : "POST",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
+				success : function(result) {
+					//console.log(result);
+					if(result == "success") {
+						selectTodoList();
+					}
+				},
+				error : function() {
+					console.log("투두 삭제 오류 ");
+				}
+			})
+		}
+		
+		//투두리스트 전체 삭제 
+		function allDeleteTodoList() {
+			var ans = confirm("리스트를 모두 삭제하시겠습니까?");
+	        if(!ans) return false;
+			
+			$.ajax({
+				url : "allDeleteTodoList.ma",
+				data : {
+					userNo : $("#mainUserNo").val()
+				},
+				type : "POST",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+				},
+				success : function(result) {
+					//console.log(result);
+					
+					if(result == "success") {
+						alert("모두 삭제했습니다.");
+						selectTodoList();
+					}
+				},
+				error : function() {
+					console.log("투두 삭제 오류 ");
+				}
+			})
+		}
 	</script>
-	
-	<!-- <script> //투두리스트
-        const todo_btn = document.getElementById("main_todo_add"); // 추가버튼
-        let todo_value = document.getElementById("main_todo_value"); // 할일 입력하는 곳
-        let todo_result = document.getElementById("mainAddTodo"); // 추가된 할일리스트
-
-        // 추가 버튼 누를 시
-        function mainAddTodo() {
-            if (todo_value.value == false) { // 할일 입력하는 곳이 비어있을 때 
-                alert("할 일을 입력해주세요!");
-            } else {
-                let todo_div = document.createElement("div");
-                let todo_check = document.createElement("input");
-                let todo_list = document.createElement("li");
-                let todo_delete = document.createElement("button");
-                todo_check.type = "checkbox"; // input type="checkbox"
-                todo_delete.className = "delete_btn";
-                todo_div.className = "changeDiv";
-                todo_check.className = "todoCheck";
-
-                todo_div.innerText = todo_value.value;
-                todo_list.appendChild(todo_check);
-                todo_list.appendChild(todo_div);
-                todo_list.appendChild(todo_delete); // 할일 리스트 추가 시 삭제 버튼도 추가
-                todo_delete.innerText = "x"; // 삭제 버튼에 들어갈 x 텍스트 넣어주기
-    
-                // 삭제 버튼 클릭 시 이벤트 실행
-                todo_delete.addEventListener("click", deleteActive);
-
-                // 체크박스 선택 시 이벤트 처리
-                todo_check.addEventListener("change", function() {
-                    if (todo_check.checked) {
-                        todo_div.style.textDecoration = "line-through";
-                        todo_div.style.color = "lightgray";
-                    } else {
-                        todo_div.style.textDecoration = "none";
-                        todo_div.style.color = "black";
-                    }
-                });
-
-                todo_result.appendChild(todo_list); // 추가된 할일에 할일 리스트 추가하기
-            }
-
-            // 추가되면 입력칸 비워주기
-            todo_value.value = "";
-            todo_value.focus();
-        }
-
-        // 할일 삭제 버튼 클릭 시
-        function deleteActive(e) {
-            let removeOne = e.target.parentElement; // 선택한 목록 한 개만 지우기(부모객체 지우기)
-            removeOne.remove();
-        }
-
-        function mainAllClear(e) {
-            if (confirm("정말 삭제하시겠습니까?")) {
-                if (todo_result.innerText == "") {
-                    alert("삭제할 목록이 없습니다.");
-                } else {
-                    todo_result.innerText = "";
-                }
-            } else {
-                return false; // 삭제 취소
-            }
-        }
-        
-
-    </script> -->
 </body>
 </html>

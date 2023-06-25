@@ -217,13 +217,66 @@
 		WHERE ROWNUM BETWEEN 1 AND 6 		
 	</select>
 	
+	<!-- 투두리스트 등록 -->
 	<insert id="mainInsertTodo">
 		INSERT INTO TODO VALUES (SEQ_TNO.NEXTVAL, #{userNo}, #{todoContent}, 'N')
 	</insert>
 	
+	<!-- 투두리스트 조회 -->
 	<select id="mainSelectTodoList" resultMap="mainTodoResultSet">
-	 	SELECT TODO_NO, TODO_CONTENT, STATUS
+	 	SELECT TODO_NO, USER_NO, TODO_CONTENT, STATUS
 	 	FROM TODO
 	 	WHERE USER_NO = #{userNo}
+	 	AND STATUS IN ('N' ,'C')
 	</select>
+	
+	<!-- 투두리스트 수정 -->
+	<update id="updateTodoList">
+ 		<!-- UPDATE TODO
+		SET STATUS = CASE
+					    WHEN STATUS = #{status} THEN 'N'
+					    WHEN STATUS = #{status} THEN 'C'
+					 END
+		WHERE TODO_NO = #{todoNo} --> <!-- 얘 안됨. 값이 null로 바뀜 -->
+		
+		<!-- UPDATE TODO
+		<choose>
+			<when test='status == "C"'>
+			SET STATUS = 'N'
+			WHERE TODO_NO = #{todoNo}
+			</when>
+			<when test='status == "N"'>
+			SET STATUS = 'C'
+			WHERE TODO_NO = #{todoNo}
+			</when>
+		</choose> -->
+		
+	  UPDATE TODO
+	  SET STATUS =
+	  <choose>
+	    <when test='status == "C"'>
+	      'N'
+	      WHERE TODO_NO = #{todoNo}
+	    </when>
+	    <when test='status == "N"'>
+	      'C'
+	      WHERE TODO_NO = #{todoNo}
+	    </when>
+	  </choose>
+		
+	</update>
+	
+	<!-- 투두리스트 한개 삭제 -->
+	<update id="deleteTodoList">
+		UPDATE TODO
+		SET STATUS = 'Y'
+		WHERE TODO_NO = #{todoNo}
+	</update>
+	
+	<!-- 투두리스트 전체 삭제 -->
+	<update id="allDeleteTodoList">
+		UPDATE TODO
+		SET STATUS = 'Y'
+		WHERE USER_NO = #{userNo}
+	</update>
 </mapper>

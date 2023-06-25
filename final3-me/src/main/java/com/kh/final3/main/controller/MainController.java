@@ -174,36 +174,74 @@ public class MainController {
 		return new Gson().toJson(aList);
 	}
 
-	// 투두리스트 입력
-	@ResponseBody
-	@RequestMapping(value = "mainInsertTodo.ma", method = RequestMethod.POST)
-	public String mainInsertTodo(HttpSession session, String todoContent) {
-		Member m = ((Member) session.getAttribute("loginUser"));
-		int userNo = m.getUserNo();
-
-		// Todo td = new Todo();
-		td.setUserNo(userNo);
-		td.setTodoContent(todoContent);
-
-		int result = mainService.mainInsertTodo(td);
-		System.out.println(result);
-
-		if (result > 0) {
-			return "success";
-		} else {
-			return "fail";
+	//투두리스트 입력
+		@ResponseBody
+		@RequestMapping(value="mainInsertTodo.ma", method = RequestMethod.POST)
+		public String mainInsertTodo(HttpSession session, String todoContent) {
+			Member m = ((Member)session.getAttribute("loginUser"));
+			int userNo = m.getUserNo();
+			
+			//Todo td = new Todo();
+			td.setUserNo(userNo);
+			td.setTodoContent(todoContent);
+			
+			int result = mainService.mainInsertTodo(td);
+			//System.out.println(result);
+			
+			if(result > 0) {
+				return "success";
+			}else {
+				return "fail";
+			}
 		}
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "selectTodoList.ma", produces = "application/json; charset=UTF-8")
-	public String mainSelectTodoList(HttpSession session, int userNo) {
-		Member m = ((Member) session.getAttribute("loginUser"));
-		m.setUserNo(userNo);
-
-		ArrayList<Todo> list = mainService.mainSelectTodoList(m);
-
-		return new Gson().toJson(list);
-	}
+		
+		//투두 리스트 조회 
+		@ResponseBody
+		@RequestMapping(value = "selectTodoList.ma", produces = "application/json; charset=UTF-8")
+		public String mainSelectTodoList(HttpSession session, int userNo) {
+			Member m = ((Member)session.getAttribute("loginUser"));
+			m.setUserNo(userNo);
+			
+			ArrayList<Todo> list = mainService.mainSelectTodoList(m);
+			//System.out.println(list);
+			return new Gson().toJson(list);
+		}
+		
+		//투두 수정 
+		@ResponseBody
+		@RequestMapping(value = "updateTodoList.ma", method = RequestMethod.POST)
+		public String updateTodoList(int todoNo, String status) {
+			td.setTodoNo(todoNo);
+			td.setStatus(status);
+			
+			int result = mainService.updateTodoList(td);
+			System.out.println(result);
+			if(result > 0) {
+				return "success";
+			}else {
+				return "fail";
+			}
+		}
+		
+		//투두 리스트 한개 삭제 
+		@ResponseBody
+		@RequestMapping(value = "deleteTodoList.ma", method = RequestMethod.POST)
+		public String deleteTodoList(int todoNo) {
+			int result = mainService.deleteTodoList(todoNo);
+			
+			return (result > 0) ? "success" : "fail";
+		}
+		
+		//투두 리스트 모두 삭제 
+		@ResponseBody
+		@RequestMapping(value = "allDeleteTodoList.ma", method = RequestMethod.POST)
+		public String allDeleteTodoList(HttpSession session, int userNo) {
+			Member m = ((Member)session.getAttribute("loginUser"));
+			m.setUserNo(userNo);
+			
+			int result = mainService.allDeleteTodoList(m);
+			
+			return (result > 0) ? "success" : "fail";
+		}
 
 }
