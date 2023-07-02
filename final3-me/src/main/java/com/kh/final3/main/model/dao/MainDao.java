@@ -1,17 +1,17 @@
 package com.kh.final3.main.model.dao;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.kh.final3.alert.model.vo.Alert;
 import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.Attendance;
 import com.kh.final3.board.model.vo.Board;
-import com.kh.final3.email.model.vo.Email;
 import com.kh.final3.member.model.vo.Member;
+import com.kh.final3.messenger.model.vo.Messenger;
 import com.kh.final3.schedule.model.vo.Schedule;
 import com.kh.final3.todo.model.vo.Todo;
 
@@ -29,9 +29,9 @@ public class MainDao {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainNoticeLikedList", userId);
 	}
 	
-	//최신 메일 조회 
-	public ArrayList<Email> mainEmailList(SqlSessionTemplate sqlSession, String userId) {
-		return (ArrayList)sqlSession.selectList("mainMapper.mainEmailList", userId);
+	//최신 쪽지 조회 
+	public ArrayList<Messenger> mainMessengerList(SqlSessionTemplate sqlSession, String userId) {
+		return (ArrayList)sqlSession.selectList("mainMapper.mainMessengerList", userId);
 	}
 
 	//출근 등록 
@@ -54,14 +54,21 @@ public class MainDao {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainOthersAllList",m);
 	}
 
+	//풀캘린더 안에 일정 조회
 	public ArrayList<Schedule> mainCalendarList(SqlSessionTemplate sqlSession, String deptCode) {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainCalendarList", deptCode);
 	}
 
+	//풀캘린더 아래 해달 날짜 일정 조회
 	public ArrayList<Schedule> mainDailyEvents(SqlSessionTemplate sqlSession, Map<String, Object> params) {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainDailyEvents", params);
 	}
+	// 근무계획조회
+	public Attendance selectLeaveType(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.selectOne("mainMapper.selectLeaveType", userNo);
+	}
 
+	//전자결재 승인 여부 조회 
 	public ArrayList<Approval> mainApprovalStatus(SqlSessionTemplate sqlSession, Member m) {
 		return (ArrayList)sqlSession.selectList("mainMapper.mainApprovalStatus", m);
 	}
@@ -92,5 +99,34 @@ public class MainDao {
 		return sqlSession.update("mainMapper.allDeleteTodoList", m);
 	}
 
+	public ArrayList<Alert> menuAlertList(SqlSessionTemplate sqlSession, int userNo) {
+		return (ArrayList)sqlSession.selectList("mainMapper.menuAlertList", userNo);
+	}
 
+	public int menuAlertUpdate(SqlSessionTemplate sqlSession, Alert al) {
+		return sqlSession.update("mainMapper.menuAlertUpdate",al);
+	}
+
+	public int menuAlertAllDelete(SqlSessionTemplate sqlSession, Member m) {
+		return sqlSession.delete("mainMapper.menuAlertAllDelete", m);
+	}
+
+//	public Attendance userMain(SqlSessionTemplate sqlSession, int userNo) {
+//		return (Attendance)sqlSession.selectOne("mainMapper.userMain", userNo);
+//	}
+
+	public int insertOnTime(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.insert("mainMapper.insertOnTime", userNo);
+	}
+
+	public int insertOffTime(SqlSessionTemplate sqlSession, int userNo) {
+		return sqlSession.insert("mainMapper.insertOffTime", userNo);
+	}
+
+	public ArrayList<Attendance> selectOnTime(SqlSessionTemplate sqlSession, int userNo) {
+		System.out.println((ArrayList)sqlSession.selectList("mainMapper.selectOnTime", userNo));
+		
+		return (ArrayList)sqlSession.selectList("mainMapper.selectOnTime", userNo);
+	}
+	
 }

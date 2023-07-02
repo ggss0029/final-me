@@ -6,14 +6,14 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.kh.final3.alert.model.vo.Alert;
 import com.kh.final3.approval.model.vo.Approval;
 import com.kh.final3.attendance.model.vo.Attendance;
 import com.kh.final3.board.model.vo.Board;
-import com.kh.final3.email.model.vo.Email;
 import com.kh.final3.main.model.dao.MainDao;
 import com.kh.final3.member.model.vo.Member;
+import com.kh.final3.messenger.model.vo.Messenger;
 import com.kh.final3.schedule.model.vo.Schedule;
 import com.kh.final3.todo.model.vo.Todo;
 
@@ -38,10 +38,10 @@ public class MainServiceImpl implements MainService {
 		return mainDao.mainNoticeLikedList(sqlSession, userId);
 	}
 	
-	//최신 메일 조회 
+	//최신 쪽지 조회 
 	@Override
-	public ArrayList<Email> mainEmailList(String userId) {
-		return mainDao.mainEmailList(sqlSession, userId);
+	public ArrayList<Messenger> mainMessengerList(String userId) {
+		return mainDao.mainMessengerList(sqlSession, userId);
 	}
 
 	//출근 등록 
@@ -78,6 +78,11 @@ public class MainServiceImpl implements MainService {
 	@Override
 	public ArrayList<Schedule> mainDailyEvents(Map<String, Object> params) {
 		return mainDao.mainDailyEvents(sqlSession, params);
+	}
+	// 근무계획조회
+	@Override
+	public Attendance selectLeaveType(int userNo) {
+		return mainDao.selectLeaveType(sqlSession, userNo);
 	}
 
 	//전자결재 리스트 조회 
@@ -116,5 +121,44 @@ public class MainServiceImpl implements MainService {
 		return mainDao.allDeleteTodoList(sqlSession, m);
 	}
 
+	//알림 전체 조회
+	@Override
+	public ArrayList<Alert> menuAlertList(int userNo) {
+		return mainDao.menuAlertList(sqlSession, userNo);
+	}
+
+	//알림 a태그 선택시 상태 변경(읽음 처리)
+	@Override
+	public int menuAlertUpdate(Alert al) {
+		return mainDao.menuAlertUpdate(sqlSession, al);
+	}
+
+	//알림 전체 삭제
+	@Override
+	public int menuAlertAllDelete(Member m) {
+		return mainDao.menuAlertAllDelete(sqlSession, m);
+	}
+
+//	@Override
+//	public Attendance userMain(int userNo) {
+//		return mainDao.userMain(sqlSession, userNo);
+//	}
+
+	@Override
+	public int insertOnTime(int userNo) {
+		return mainDao.insertOnTime(sqlSession, userNo);
+	}
+
+	@Override
+	public int insertOffTime(int userNo) {
+		return mainDao.insertOffTime(sqlSession, userNo);
+	}
+
+	@Override
+	public ArrayList<Attendance> selectOnTime(int userNo) {
+		System.out.println(mainDao.selectOnTime(sqlSession, userNo));
+		
+		return mainDao.selectOnTime(sqlSession, userNo);
+	}
 
 }
